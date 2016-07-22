@@ -78,12 +78,13 @@ class Compare(object):
             Size under the cursor to monitor.
         """
         # specify the screen grab method based on the os
-        self.grab = getattr(
-            self, '_grab_{0}'.format(platform.system().lower()))
-
-        if not self.grab:
-            raise ValueError('{0} is not a supported os system.'.format(
-                platform.system().lower()))
+        try:
+            self.grab = getattr(
+                self, '_grab_{0}'.format(platform.system().lower()))
+        except AttributeError:
+            raise NotImplementedError(
+                '{0} is not a supported os system.'.format(
+                    platform.system().lower()))
 
         self.thread = None
         self.event = None
