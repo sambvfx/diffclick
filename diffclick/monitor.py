@@ -16,13 +16,20 @@ class Listen(pymouse.PyMouseEvent):
     Start the service by calling `run`.
     """
     # leftclick = 1, middleclick = 2, rightclick = 3
-    MOUSE_BUTTON = 9
+    # default button if no button is specified
+    DEFAULT_BUTTON = 9
 
     def __init__(self, button=None, *args, **kwargs):
+        """
+        Parameters
+        ----------
+        button : int
+            Button to start / stop the ``Compare``
+        """
         super(Listen, self).__init__(*args, **kwargs)
 
         if button is None:
-            self.button = self.MOUSE_BUTTON
+            self.button = self.DEFAULT_BUTTON
 
         self.compare = Compare(self.callback)
         self.press = None
@@ -36,9 +43,6 @@ class Listen(pymouse.PyMouseEvent):
             elif press is False:
                 self.press = False
                 self.compare.stop()
-
-    def escape(self, event):
-        return False
 
     def callback(self):
         print '\n    | CLICK{0}'.format(self.mouse.position())
@@ -156,7 +160,7 @@ class Compare(object):
         Parameters
         ----------
         callback : callable
-        event : ``pymouse.PyMouseEvent``
+        event : ``threading.Event``
         """
         time.sleep(self.start_delay)
 
